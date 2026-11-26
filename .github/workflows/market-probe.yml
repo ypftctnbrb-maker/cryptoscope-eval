@@ -1,0 +1,28 @@
+name: Bounded public market probe
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Verify fixtures
+        run: node --test --test-reporter=tap test/probe.test.mjs
+      - name: Collect bounded public observations
+        run: |
+          mkdir -p evidence
+          node scripts/market-probe.mjs > evidence/market-probe.json
+          node -e 'const r=require("./evidence/market-probe.json"); console.table(r.rows.map(({venue,market,kind,httpStatus,outcome,latencyMs})=>({venue,market,kind,httpStatus,outcome,latencyMs})))'
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: market-probe-${{ github.run_id }}
+          path: evidence/market-probe.json
+          retention-days: 7
