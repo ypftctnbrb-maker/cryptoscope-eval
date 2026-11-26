@@ -2,12 +2,16 @@ name: Bounded public market probe
 
 on:
   workflow_dispatch:
+  pull_request:
+    branches: [codex/issue-1]
+    types: [opened, synchronize, reopened]
 
 permissions:
   contents: read
 
 jobs:
   probe:
+    if: github.event_name != 'pull_request' || (github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'codex/issue-3')
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:

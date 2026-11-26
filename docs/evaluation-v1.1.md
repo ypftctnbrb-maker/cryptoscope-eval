@@ -19,3 +19,16 @@ Estimate the scored duration after measuring paired losses and their dependence 
 ## Provider gate
 
 Check Gemini free quota, rate limits, response schema and repeated-response stability in a separate approved gate. Disable billing and fail closed when free quota or eligibility cannot be verified. Record availability and quota evidence independently of exchange data. No model calls occur in this preparation.
+
+## Gate table — 2026-11-26 UTC
+
+| Gate | Status | Evidence or exit criterion |
+|---|---|---|
+| G0 transport and contracts | Preparation | Run the 21-request probe, review restrictions and schemas per venue, and preserve the runner artifact. |
+| Core pin | HOLD | Record the exact approved market core SHA and digest in the guard. Draft #2 HEAD is the preparation base, not approval of an evaluation core. |
+| Snapshot, guard and external anchor | HOLD | Verify that unauthorized branches and altered snapshots fail before push. Verify an independent timestamp receipt before accumulation. |
+| Seven-day G0 | HOLD | Start only after the preceding gates are authorized and operating. Record completeness, leakage tests, and the exact outcome venue for both arms. |
+| Gemini eligibility and stability | HOLD | Verify the exact project and model's free quota and billing state in AI Studio. Stability is a separate test and has not been measured. |
+| Scored evaluation | HOLD | Freeze folds and outcome horizon, exercise purge/embargo fixtures, and size from paired variance, time dependence and valid pair throughput. |
+
+Gemini documentation reviewed 2026-11-26 UTC. Google lists free Standard text input/output for `gemini-2.5-flash-lite`; model and feature eligibility vary, and some models have no free quota. Active RPM, TPM and RPD are project/model-specific. Record the actual limits from AI Studio before authorizing any call. No project quota evidence was available in this preparation. Use a project without linked billing, verify its free-tier eligibility and quota, lock the exact model, stop at local caps or 429, and fail closed on uncertain tier or model availability. No model calls were made. [Pricing](https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-flash-lite) · [Rate limits](https://ai.google.dev/gemini-api/docs/rate-limits) · [Billing](https://ai.google.dev/gemini-api/docs/billing)
