@@ -1,0 +1,1720 @@
+{
+  "utc": "2026-11-26T23:21:45.564Z",
+  "baseCandidate": null,
+  "geography": {
+    "runnerOS": null,
+    "region": null
+  },
+  "rows": [
+    {
+      "venue": "bybit",
+      "market": "spot",
+      "kind": "trades",
+      "endpoint": "https://api.bybit.com/v5/market/recent-trade?symbol=BTCUSDT&limit=5&category=spot",
+      "utc": "2026-11-26T23:21:36.578Z",
+      "latencyMs": 826,
+      "httpStatus": 200,
+      "outcome": "observed",
+      "rateLimit": {
+        "retryAfter": null,
+        "xRatelimitLimit": null,
+        "xRatelimitRemaining": null,
+        "xRatelimitReset": null,
+        "xBapiLimit": null,
+        "xBapiLimitStatus": null,
+        "xBapiLimitResetTimestamp": null
+      },
+      "schema": [
+        [
+          "retCode",
+          "number"
+        ],
+        [
+          "retMsg",
+          "string"
+        ],
+        [
+          "result",
+          [
+            [
+              "category",
+              "string"
+            ],
+            [
+              "list",
+              [
+                "object"
+              ]
+            ]
+          ]
+        ],
+        [
+          "retExtInfo",
+          []
+        ],
+        [
+          "time",
+          "number"
+        ]
+      ],
+      "observations": {
+        "inspected": 5,
+        "normalized": 5,
+        "quantityUnit": "base",
+        "firstObservedQuantity": 0.001108,
+        "sides": [
+          "buy"
+        ],
+        "latestTimestampMs": 1795735291867
+      }
+    },
+    {
+      "venue": "bybit",
+      "market": "perp",
+      "kind": "trades",
+      "endpoint": "https://api.bybit.com/v5/market/recent-trade?symbol=BTCUSDT&limit=5&category=linear",
+      "utc": "2026-11-26T23:21:37.404Z",
+      "latencyMs": 271,
+      "httpStatus": 200,
+      "outcome": "observed",
+      "rateLimit": {
+        "retryAfter": null,
+        "xRatelimitLimit": null,
+        "xRatelimitRemaining": null,
+        "xRatelimitReset": null,
+        "xBapiLimit": null,
+        "xBapiLimitStatus": null,
+        "xBapiLimitResetTimestamp": null
+      },
+      "schema": [
+        [
+          "retCode",
+          "number"
+        ],
+        [
+          "retMsg",
+          "string"
+        ],
+        [
+          "result",
+          [
+            [
+              "category",
+              "string"
+            ],
+            [
+              "list",
+              [
+                "object"
+              ]
+            ]
+          ]
+        ],
+        [
+          "retExtInfo",
+          []
+        ],
+        [
+          "time",
+          "number"
+        ]
+      ],
+      "observations": {
+        "inspected": 5,
+        "normalized": 5,
+        "quantityUnit": "base",
+        "firstObservedQuantity": 0.001,
+        "sides": [
+          "sell",
+          "buy"
+        ],
+        "latestTimestampMs": 1795735297067
+      }
+    },
+    {
+      "venue": "bybit",
+      "market": "perp",
+      "kind": "oi",
+      "endpoint": "https://api.bybit.com/v5/market/open-interest?category=linear&symbol=BTCUSDT&intervalTime=5min&limit=1",
+      "utc": "2026-11-26T23:21:37.675Z",
+      "latencyMs": 1028,
+      "httpStatus": 200,
+      "outcome": "observed",
+      "rateLimit": {
+        "retryAfter": null,
+        "xRatelimitLimit": null,
+        "xRatelimitRemaining": null,
+        "xRatelimitReset": null,
+        "xBapiLimit": null,
+        "xBapiLimitStatus": null,
+        "xBapiLimitResetTimestamp": null
+      },
+      "schema": [
+        [
+          "retCode",
+          "number"
+        ],
+        [
+          "retMsg",
+          "string"
+        ],
+        [
+          "result",
+          [
+            [
+              "symbol",
+              "string"
+            ],
+            [
+              "category",
+              "string"
+            ],
+            [
+              "list",
+              [
+                "object"
+              ]
+            ],
+            [
+              "nextPageCursor",
+              "string"
+            ]
+          ]
+        ],
+        [
+          "retExtInfo",
+          []
+        ],
+        [
+          "time",
+          "number"
+        ]
+      ],
+      "observations": {
+        "oi": {
+          "value": 69913.266,
+          "unit": "base"
+        },
+        "fundingRate": null,
+        "intervalHours": null,
+        "timestampMs": 1795735200000
+      }
+    },
+    {
+      "venue": "bybit",
+      "market": "perp",
+      "kind": "funding",
+      "endpoint": "https://api.bybit.com/v5/market/tickers?category=linear&symbol=BTCUSDT",
+      "utc": "2026-11-26T23:21:38.703Z",
+      "latencyMs": 675,
+      "httpStatus": 200,
+      "outcome": "observed",
+      "rateLimit": {
+        "retryAfter": null,
+        "xRatelimitLimit": null,
+        "xRatelimitRemaining": null,
+        "xRatelimitReset": null,
+        "xBapiLimit": null,
+        "xBapiLimitStatus": null,
+        "xBapiLimitResetTimestamp": null
+      },
+      "schema": [
+        [
+          "retCode",
+          "number"
+        ],
+        [
+          "retMsg",
+          "string"
+        ],
+        [
+          "result",
+          [
+            [
+              "category",
+              "string"
+            ],
+            [
+              "list",
+              [
+                "object"
+              ]
+            ]
+          ]
+        ],
+        [
+          "retExtInfo",
+          []
+        ],
+        [
+          "time",
+          "number"
+        ]
+      ],
+      "observations": {
+        "oi": {
+          "value": 69893.616,
+          "unit": "base"
+        },
+        "fundingRate": 0.00002087,
+        "intervalHours": 8,
+        "timestampMs": 1795735299286
+      }
+    },
+    {
+      "venue": "okx",
+      "market": "spot",
+      "kind": "trades",
+      "endpoint": "https://www.okx.com/api/v5/market/trades?limit=5&instId=BTC-USDT",
+      "utc": "2026-11-26T23:21:39.378Z",
+      "latencyMs": 338,
+      "httpStatus": 200,
+      "outcome": "observed",
+      "rateLimit": {
+        "retryAfter": null,
+        "xRatelimitLimit": null,
+        "xRatelimitRemaining": null,
+        "xRatelimitReset": null,
+        "xBapiLimit": null,
+        "xBapiLimitStatus": null,
+        "xBapiLimitResetTimestamp": null
+      },
+      "schema": [
+        [
+          "code",
+          "string"
+        ],
+        [
+          "data",
+          [
+            [
+              [
+                "instId",
+                "string"
+              ],
+              [
+                "tradeId",
+                "string"
+              ],
+              [
+                "px",
+                "string"
+              ],
+              [
+                "sz",
+                "string"
+              ],
+              [
+                "side",
+                "string"
+              ],
+              [
+                "ts",
+                "string"
+              ],
+              [
+                "source",
+                "string"
+              ]
+            ]
+          ]
+        ],
+        [
+          "msg",
+          "string"
+        ]
+      ],
+      "observations": {
+        "inspected": 5,
+        "normalized": 5,
+        "quantityUnit": "base",
+        "firstObservedQuantity": 0.00018,
+        "sides": [
+          "sell"
+        ],
+        "latestTimestampMs": 1795735298137
+      }
+    },
+    {
+      "venue": "okx",
+      "market": "perp",
+      "kind": "trades",
+      "endpoint": "https://www.okx.com/api/v5/market/trades?limit=5&instId=BTC-USDT-SWAP",
+      "utc": "2026-11-26T23:21:39.717Z",
+      "latencyMs": 175,
+      "httpStatus": 200,
+      "outcome": "observed",
+      "rateLimit": {
+        "retryAfter": null,
+        "xRatelimitLimit": null,
+        "xRatelimitRemaining": null,
+        "xRatelimitReset": null,
+        "xBapiLimit": null,
+        "xBapiLimitStatus": null,
+        "xBapiLimitResetTimestamp": null
+      },
+      "schema": [
+        [
+          "code",
+          "string"
+        ],
+        [
+          "data",
+          [
+            [
+              [
+                "instId",
+                "string"
+              ],
+              [
+                "tradeId",
+                "string"
+              ],
+              [
+                "px",
+                "string"
+              ],
+              [
+                "sz",
+                "string"
+              ],
+              [
+                "side",
+                "string"
+              ],
+              [
+                "ts",
+                "string"
+              ],
+              [
+                "source",
+                "string"
+              ]
+            ]
+          ]
+        ],
+        [
+          "msg",
+          "string"
+        ]
+      ],
+      "observations": {
+        "inspected": 5,
+        "normalized": 5,
+        "quantityUnit": "contracts",
+        "firstObservedQuantity": 2.32,
+        "sides": [
+          "buy"
+        ],
+        "latestTimestampMs": 1795735298800,
+        "firstObservedQuantityBTC": 0.0232
+      }
+    },
+    {
+      "venue": "okx",
+      "market": "perp",
+      "kind": "oi",
+      "endpoint": "https://www.okx.com/api/v5/public/open-interest?instType=SWAP&instId=BTC-USDT-SWAP",
+      "utc": "2026-11-26T23:21:39.892Z",
+      "latencyMs": 151,
+      "httpStatus": 200,
+      "outcome": "observed",
+      "rateLimit": {
+        "retryAfter": null,
+        "xRatelimitLimit": null,
+        "xRatelimitRemaining": null,
+        "xRatelimitReset": null,
+        "xBapiLimit": null,
+        "xBapiLimitStatus": null,
+        "xBapiLimitResetTimestamp": null
+      },
+      "schema": [
+        [
+          "code",
+          "string"
+        ],
+        [
+          "data",
+          [
+            [
+              [
+                "instId",
+                "string"
+              ],
+              [
+                "instType",
+                "string"
+              ],
+              [
+                "oi",
+                "string"
+              ],
+              [
+                "oiCcy",
+                "string"
+              ],
+              [
+                "oiUsd",
+                "string"
+              ],
+              [
+                "ts",
+                "string"
+              ]
+            ]
+          ]
+        ],
+        [
+          "msg",
+          "string"
+        ]
+      ],
+      "observations": {
+        "oi": {
+          "value": 31922.424400000134,
+          "unit": "base"
+        },
+        "oiContracts": 3192242.4400000134,
+        "contract": null,
+        "fundingRate": null,
+        "intervalHours": null,
+        "timestampMs": 1795735299984,
+        "convertedOiBTC": 31922.424400000134
+      }
+    },
+    {
+      "venue": "okx",
+      "market": "perp",
+      "kind": "funding",
+      "endpoint": "https://www.okx.com/api/v5/public/funding-rate?instId=BTC-USDT-SWAP",
+      "utc": "2026-11-26T23:21:40.043Z",
+      "latencyMs": 135,
+      "httpStatus": 200,
+      "outcome": "observed",
+      "rateLimit": {
+        "retryAfter": null,
+        "xRatelimitLimit": null,
+        "xRatelimitRemaining": null,
+        "xRatelimitReset": null,
+        "xBapiLimit": null,
+        "xBapiLimitStatus": null,
+        "xBapiLimitResetTimestamp": null
+      },
+      "schema": [
+        [
+          "code",
+          "string"
+        ],
+        [
+          "data",
+          [
+            [
+              [
+                "formulaType",
+                "string"
+              ],
+              [
+                "fundingRate",
+                "string"
+              ],
+              [
+                "fundingTime",
+                "string"
+              ],
+              [
+                "impactValue",
+                "string"
+              ],
+              [
+                "instId",
+                "string"
+              ],
+              [
+                "instType",
+                "string"
+              ],
+              [
+                "interestRate",
+                "string"
+              ],
+              [
+                "maxFundingRate",
+                "string"
+              ],
+              [
+                "method",
+                "string"
+              ],
+              [
+                "minFundingRate",
+                "string"
+              ],
+              [
+                "nextFundingRate",
+                "string"
+              ],
+              [
+                "nextFundingTime",
+                "string"
+              ],
+              [
+                "premium",
+                "string"
+              ],
+              [
+                "prevFundingTime",
+                "string"
+              ],
+              [
+                "settFundingRate",
+                "string"
+              ],
+              [
+                "settState",
+                "string"
+              ],
+              [
+                "ts",
+                "string"
+              ]
+            ]
+          ]
+        ],
+        [
+          "msg",
+          "string"
+        ]
+      ],
+      "observations": {
+        "oi": null,
+        "oiContracts": null,
+        "contract": null,
+        "fundingRate": -0.0000026000349827,
+        "intervalHours": 8,
+        "timestampMs": 1795735270518
+      }
+    },
+    {
+      "venue": "okx",
+      "market": "perp",
+      "kind": "contract",
+      "endpoint": "https://www.okx.com/api/v5/public/instruments?instType=SWAP&instId=BTC-USDT-SWAP",
+      "utc": "2026-11-26T23:21:40.178Z",
+      "latencyMs": 245,
+      "httpStatus": 200,
+      "outcome": "observed",
+      "rateLimit": {
+        "retryAfter": null,
+        "xRatelimitLimit": null,
+        "xRatelimitRemaining": null,
+        "xRatelimitReset": null,
+        "xBapiLimit": null,
+        "xBapiLimitStatus": null,
+        "xBapiLimitResetTimestamp": null
+      },
+      "schema": [
+        [
+          "code",
+          "string"
+        ],
+        [
+          "data",
+          [
+            [
+              [
+                "alias",
+                "string"
+              ],
+              [
+                "auctionEndTime",
+                "string"
+              ],
+              [
+                "baseCcy",
+                "string"
+              ],
+              [
+                "category",
+                "string"
+              ],
+              [
+                "contTdSwTime",
+                "string"
+              ],
+              [
+                "ctMult",
+                "string"
+              ],
+              [
+                "ctType",
+                "string"
+              ],
+              [
+                "ctVal",
+                "string"
+              ],
+              [
+                "ctValCcy",
+                "string"
+              ],
+              [
+                "expTime",
+                "string"
+              ],
+              [
+                "floatPxLmtPct",
+                "string"
+              ],
+              [
+                "freq",
+                "string"
+              ],
+              [
+                "futureSettlement",
+                "boolean"
+              ],
+              [
+                "groupId",
+                "string"
+              ],
+              [
+                "initPxLmtPct",
+                "string"
+              ],
+              [
+                "instCategory",
+                "string"
+              ],
+              [
+                "instFamily",
+                "string"
+              ],
+              [
+                "instId",
+                "string"
+              ],
+              [
+                "instIdCode",
+                "number"
+              ],
+              [
+                "instType",
+                "string"
+              ],
+              [
+                "lever",
+                "string"
+              ],
+              [
+                "listTime",
+                "string"
+              ],
+              [
+                "longPosRemainingQuota",
+                "string"
+              ],
+              [
+                "lotSz",
+                "string"
+              ],
+              [
+                "maxIcebergSz",
+                "string"
+              ],
+              [
+                "maxLmtAmt",
+                "string"
+              ],
+              [
+                "maxLmtSz",
+                "string"
+              ],
+              [
+                "maxMktAmt",
+                "string"
+              ],
+              [
+                "maxMktSz",
+                "string"
+              ],
+              [
+                "maxPlatOICoinLmt",
+                "string"
+              ],
+              [
+                "maxPlatOILmt",
+                "string"
+              ],
+              [
+                "maxPxLmtPct",
+                "string"
+              ]
+            ]
+          ]
+        ],
+        [
+          "msg",
+          "string"
+        ]
+      ],
+      "observations": {
+        "oi": null,
+        "oiContracts": null,
+        "contract": {
+          "basePerContract": 0.01,
+          "unit": "BTC"
+        },
+        "fundingRate": null,
+        "intervalHours": null,
+        "timestampMs": null
+      }
+    },
+    {
+      "venue": "bitfinex",
+      "market": "spot",
+      "kind": "trades",
+      "endpoint": "https://api-pub.bitfinex.com/v2/trades/tBTCUSD/hist?limit=5",
+      "utc": "2026-11-26T23:21:40.423Z",
+      "latencyMs": 343,
+      "httpStatus": 200,
+      "outcome": "observed",
+      "rateLimit": {
+        "retryAfter": null,
+        "xRatelimitLimit": null,
+        "xRatelimitRemaining": null,
+        "xRatelimitReset": null,
+        "xBapiLimit": null,
+        "xBapiLimitStatus": null,
+        "xBapiLimitResetTimestamp": null
+      },
+      "schema": [
+        [
+          "number"
+        ]
+      ],
+      "observations": {
+        "inspected": 5,
+        "normalized": 5,
+        "quantityUnit": "base",
+        "firstObservedQuantity": 0.025,
+        "sides": [
+          "sell",
+          "buy"
+        ],
+        "latestTimestampMs": 1795735298179
+      }
+    },
+    {
+      "venue": "bitfinex",
+      "market": "perp",
+      "kind": "trades",
+      "endpoint": "https://api-pub.bitfinex.com/v2/trades/tBTCF0:USTF0/hist?limit=5",
+      "utc": "2026-11-26T23:21:40.766Z",
+      "latencyMs": 305,
+      "httpStatus": 200,
+      "outcome": "observed",
+      "rateLimit": {
+        "retryAfter": null,
+        "xRatelimitLimit": null,
+        "xRatelimitRemaining": null,
+        "xRatelimitReset": null,
+        "xBapiLimit": null,
+        "xBapiLimitStatus": null,
+        "xBapiLimitResetTimestamp": null
+      },
+      "schema": [
+        [
+          "number"
+        ]
+      ],
+      "observations": {
+        "inspected": 5,
+        "normalized": 5,
+        "quantityUnit": "contracts",
+        "firstObservedQuantity": 0.00056845,
+        "sides": [
+          "sell",
+          "buy"
+        ],
+        "latestTimestampMs": 1795735297801
+      }
+    },
+    {
+      "venue": "bitfinex",
+      "market": "perp",
+      "kind": "oi-funding",
+      "endpoint": "https://api-pub.bitfinex.com/v2/status/deriv?keys=tBTCF0%3AUSTF0",
+      "utc": "2026-11-26T23:21:41.071Z",
+      "latencyMs": 283,
+      "httpStatus": 200,
+      "outcome": "observed",
+      "rateLimit": {
+        "retryAfter": null,
+        "xRatelimitLimit": null,
+        "xRatelimitRemaining": null,
+        "xRatelimitReset": null,
+        "xBapiLimit": null,
+        "xBapiLimitStatus": null,
+        "xBapiLimitResetTimestamp": null
+      },
+      "schema": [
+        [
+          "string"
+        ]
+      ],
+      "observations": {
+        "oiContracts": 8886.28782807,
+        "fundingRate": 0,
+        "intervalHours": 8,
+        "timestampMs": 1795735300000
+      }
+    },
+    {
+      "venue": "hyperliquid",
+      "market": "spot",
+      "kind": "spot-meta",
+      "endpoint": "https://api.hyperliquid.xyz/info",
+      "query": {
+        "type": "spotMeta"
+      },
+      "utc": "2026-11-26T23:21:41.355Z",
+      "latencyMs": 585,
+      "httpStatus": 200,
+      "outcome": "observed",
+      "rateLimit": {
+        "retryAfter": null,
+        "xRatelimitLimit": null,
+        "xRatelimitRemaining": null,
+        "xRatelimitReset": null,
+        "xBapiLimit": null,
+        "xBapiLimitStatus": null,
+        "xBapiLimitResetTimestamp": null
+      },
+      "schema": [
+        [
+          "universe",
+          [
+            [
+              [
+                "tokens",
+                "array"
+              ],
+              [
+                "name",
+                "string"
+              ],
+              [
+                "index",
+                "number"
+              ],
+              [
+                "isCanonical",
+                "boolean"
+              ]
+            ]
+          ]
+        ],
+        [
+          "tokens",
+          [
+            [
+              [
+                "name",
+                "string"
+              ],
+              [
+                "szDecimals",
+                "number"
+              ],
+              [
+                "weiDecimals",
+                "number"
+              ],
+              [
+                "index",
+                "number"
+              ],
+              [
+                "tokenId",
+                "string"
+              ],
+              [
+                "isCanonical",
+                "boolean"
+              ],
+              [
+                "evmContract",
+                "object"
+              ],
+              [
+                "fullName",
+                "null"
+              ],
+              [
+                "deployerTradingFeeShare",
+                "string"
+              ]
+            ]
+          ]
+        ]
+      ],
+      "observations": {
+        "coin": "@142"
+      }
+    },
+    {
+      "venue": "hyperliquid",
+      "market": "spot",
+      "kind": "trades",
+      "endpoint": "https://api.hyperliquid.xyz/info",
+      "query": {
+        "type": "recentTrades",
+        "coin": "@142"
+      },
+      "utc": "2026-11-26T23:21:41.940Z",
+      "latencyMs": 386,
+      "httpStatus": 200,
+      "outcome": "observed",
+      "rateLimit": {
+        "retryAfter": null,
+        "xRatelimitLimit": null,
+        "xRatelimitRemaining": null,
+        "xRatelimitReset": null,
+        "xBapiLimit": null,
+        "xBapiLimitStatus": null,
+        "xBapiLimitResetTimestamp": null
+      },
+      "schema": [
+        [
+          [
+            "coin",
+            "string"
+          ],
+          [
+            "side",
+            "string"
+          ],
+          [
+            "px",
+            "string"
+          ],
+          [
+            "sz",
+            "string"
+          ],
+          [
+            "time",
+            "number"
+          ],
+          [
+            "hash",
+            "string"
+          ],
+          [
+            "tid",
+            "number"
+          ],
+          [
+            "users",
+            [
+              "string"
+            ]
+          ]
+        ]
+      ],
+      "observations": {
+        "inspected": 5,
+        "normalized": 5,
+        "quantityUnit": "base",
+        "firstObservedQuantity": 0.00025,
+        "sides": [
+          "buy",
+          "sell"
+        ],
+        "latestTimestampMs": 1795735299026
+      }
+    },
+    {
+      "venue": "hyperliquid",
+      "market": "perp",
+      "kind": "trades",
+      "endpoint": "https://api.hyperliquid.xyz/info",
+      "query": {
+        "type": "recentTrades",
+        "coin": "BTC"
+      },
+      "utc": "2026-11-26T23:21:42.326Z",
+      "latencyMs": 420,
+      "httpStatus": 200,
+      "outcome": "observed",
+      "rateLimit": {
+        "retryAfter": null,
+        "xRatelimitLimit": null,
+        "xRatelimitRemaining": null,
+        "xRatelimitReset": null,
+        "xBapiLimit": null,
+        "xBapiLimitStatus": null,
+        "xBapiLimitResetTimestamp": null
+      },
+      "schema": [
+        [
+          [
+            "coin",
+            "string"
+          ],
+          [
+            "side",
+            "string"
+          ],
+          [
+            "px",
+            "string"
+          ],
+          [
+            "sz",
+            "string"
+          ],
+          [
+            "time",
+            "number"
+          ],
+          [
+            "hash",
+            "string"
+          ],
+          [
+            "tid",
+            "number"
+          ],
+          [
+            "users",
+            [
+              "string"
+            ]
+          ]
+        ]
+      ],
+      "observations": {
+        "inspected": 5,
+        "normalized": 5,
+        "quantityUnit": "base",
+        "firstObservedQuantity": 0.00055,
+        "sides": [
+          "buy"
+        ],
+        "latestTimestampMs": 1795735302057
+      }
+    },
+    {
+      "venue": "hyperliquid",
+      "market": "perp",
+      "kind": "oi-funding",
+      "endpoint": "https://api.hyperliquid.xyz/info",
+      "query": {
+        "type": "metaAndAssetCtxs"
+      },
+      "utc": "2026-11-26T23:21:42.747Z",
+      "latencyMs": 432,
+      "httpStatus": 200,
+      "outcome": "observed",
+      "rateLimit": {
+        "retryAfter": null,
+        "xRatelimitLimit": null,
+        "xRatelimitRemaining": null,
+        "xRatelimitReset": null,
+        "xBapiLimit": null,
+        "xBapiLimitStatus": null,
+        "xBapiLimitResetTimestamp": null
+      },
+      "schema": [
+        [
+          [
+            "universe",
+            [
+              "object"
+            ]
+          ],
+          [
+            "marginTables",
+            [
+              "array"
+            ]
+          ],
+          [
+            "collateralToken",
+            "number"
+          ]
+        ]
+      ],
+      "observations": {
+        "oi": {
+          "value": 34512.0681,
+          "unit": "base"
+        },
+        "fundingRate": -6.742e-7,
+        "intervalHours": null,
+        "timestampMs": null
+      }
+    },
+    {
+      "venue": "mexc",
+      "market": "spot",
+      "kind": "trades",
+      "endpoint": "https://api.mexc.com/api/v3/trades?symbol=BTCUSDT&limit=5",
+      "utc": "2026-11-26T23:21:43.179Z",
+      "latencyMs": 611,
+      "httpStatus": 200,
+      "outcome": "observed",
+      "rateLimit": {
+        "retryAfter": null,
+        "xRatelimitLimit": null,
+        "xRatelimitRemaining": null,
+        "xRatelimitReset": null,
+        "xBapiLimit": null,
+        "xBapiLimitStatus": null,
+        "xBapiLimitResetTimestamp": null
+      },
+      "schema": [
+        [
+          [
+            "id",
+            "null"
+          ],
+          [
+            "price",
+            "string"
+          ],
+          [
+            "qty",
+            "string"
+          ],
+          [
+            "quoteQty",
+            "string"
+          ],
+          [
+            "time",
+            "number"
+          ],
+          [
+            "isBuyerMaker",
+            "boolean"
+          ],
+          [
+            "isBestMatch",
+            "boolean"
+          ],
+          [
+            "tradeType",
+            "string"
+          ],
+          [
+            "isRpi",
+            "boolean"
+          ]
+        ]
+      ],
+      "observations": {
+        "inspected": 5,
+        "normalized": 5,
+        "quantityUnit": "base",
+        "firstObservedQuantity": 0.01610754,
+        "sides": [
+          "sell",
+          "buy"
+        ],
+        "latestTimestampMs": 1795735298133
+      }
+    },
+    {
+      "venue": "mexc",
+      "market": "perp",
+      "kind": "trades",
+      "endpoint": "https://contract.mexc.com/api/v1/contract/deals/BTC_USDT",
+      "utc": "2026-11-26T23:21:43.789Z",
+      "latencyMs": 683,
+      "httpStatus": 200,
+      "outcome": "observed",
+      "rateLimit": {
+        "retryAfter": null,
+        "xRatelimitLimit": null,
+        "xRatelimitRemaining": null,
+        "xRatelimitReset": null,
+        "xBapiLimit": null,
+        "xBapiLimitStatus": null,
+        "xBapiLimitResetTimestamp": null
+      },
+      "schema": [
+        [
+          "success",
+          "boolean"
+        ],
+        [
+          "code",
+          "number"
+        ],
+        [
+          "data",
+          [
+            [
+              [
+                "p",
+                "number"
+              ],
+              [
+                "v",
+                "number"
+              ],
+              [
+                "T",
+                "number"
+              ],
+              [
+                "O",
+                "number"
+              ],
+              [
+                "M",
+                "number"
+              ],
+              [
+                "t",
+                "number"
+              ],
+              [
+                "i",
+                "string"
+              ],
+              [
+                "cts",
+                "string"
+              ]
+            ]
+          ]
+        ]
+      ],
+      "observations": {
+        "inspected": 5,
+        "normalized": 5,
+        "quantityUnit": "contracts",
+        "firstObservedQuantity": 5,
+        "sides": [
+          "buy",
+          "sell"
+        ],
+        "latestTimestampMs": 1795735303236,
+        "firstObservedQuantityBTC": 0.0005
+      }
+    },
+    {
+      "venue": "mexc",
+      "market": "perp",
+      "kind": "oi",
+      "endpoint": "https://contract.mexc.com/api/v1/contract/ticker?symbol=BTC_USDT",
+      "utc": "2026-11-26T23:21:44.472Z",
+      "latencyMs": 242,
+      "httpStatus": 200,
+      "outcome": "observed",
+      "rateLimit": {
+        "retryAfter": null,
+        "xRatelimitLimit": null,
+        "xRatelimitRemaining": null,
+        "xRatelimitReset": null,
+        "xBapiLimit": null,
+        "xBapiLimitStatus": null,
+        "xBapiLimitResetTimestamp": null
+      },
+      "schema": [
+        [
+          "success",
+          "boolean"
+        ],
+        [
+          "code",
+          "number"
+        ],
+        [
+          "data",
+          [
+            [
+              "contractId",
+              "number"
+            ],
+            [
+              "symbol",
+              "string"
+            ],
+            [
+              "lastPrice",
+              "number"
+            ],
+            [
+              "bid1",
+              "number"
+            ],
+            [
+              "ask1",
+              "number"
+            ],
+            [
+              "volume24",
+              "number"
+            ],
+            [
+              "amount24",
+              "number"
+            ],
+            [
+              "holdVol",
+              "number"
+            ],
+            [
+              "lower24Price",
+              "number"
+            ],
+            [
+              "high24Price",
+              "number"
+            ],
+            [
+              "riseFallRate",
+              "number"
+            ],
+            [
+              "riseFallValue",
+              "number"
+            ],
+            [
+              "indexPrice",
+              "number"
+            ],
+            [
+              "fairPrice",
+              "number"
+            ],
+            [
+              "fundingRate",
+              "number"
+            ],
+            [
+              "maxBidPrice",
+              "number"
+            ],
+            [
+              "minAskPrice",
+              "number"
+            ],
+            [
+              "timestamp",
+              "number"
+            ],
+            [
+              "riseFallRates",
+              [
+                [
+                  "zone",
+                  "string"
+                ],
+                [
+                  "r",
+                  "number"
+                ],
+                [
+                  "v",
+                  "number"
+                ],
+                [
+                  "r7",
+                  "number"
+                ],
+                [
+                  "r30",
+                  "number"
+                ],
+                [
+                  "r90",
+                  "number"
+                ],
+                [
+                  "r180",
+                  "number"
+                ],
+                [
+                  "r365",
+                  "number"
+                ]
+              ]
+            ],
+            [
+              "riseFallRatesOfTimezone",
+              [
+                "number"
+              ]
+            ]
+          ]
+        ]
+      ],
+      "observations": {
+        "oiContracts": 602747667,
+        "contract": null,
+        "fundingRate": 0.000097,
+        "intervalHours": null,
+        "timestampMs": 1795735301923,
+        "convertedOiBTC": 60274.7667
+      }
+    },
+    {
+      "venue": "mexc",
+      "market": "perp",
+      "kind": "funding",
+      "endpoint": "https://contract.mexc.com/api/v1/contract/funding_rate/BTC_USDT",
+      "utc": "2026-11-26T23:21:44.714Z",
+      "latencyMs": 602,
+      "httpStatus": 200,
+      "outcome": "observed",
+      "rateLimit": {
+        "retryAfter": null,
+        "xRatelimitLimit": null,
+        "xRatelimitRemaining": null,
+        "xRatelimitReset": null,
+        "xBapiLimit": null,
+        "xBapiLimitStatus": null,
+        "xBapiLimitResetTimestamp": null
+      },
+      "schema": [
+        [
+          "success",
+          "boolean"
+        ],
+        [
+          "code",
+          "number"
+        ],
+        [
+          "data",
+          [
+            [
+              "symbol",
+              "string"
+            ],
+            [
+              "fundingRate",
+              "number"
+            ],
+            [
+              "maxFundingRate",
+              "number"
+            ],
+            [
+              "minFundingRate",
+              "number"
+            ],
+            [
+              "collectCycle",
+              "number"
+            ],
+            [
+              "nextSettleTime",
+              "number"
+            ],
+            [
+              "timestamp",
+              "number"
+            ],
+            [
+              "idxPrice",
+              "number"
+            ],
+            [
+              "fairPrice",
+              "number"
+            ],
+            [
+              "fundingType",
+              "number"
+            ]
+          ]
+        ]
+      ],
+      "observations": {
+        "oiContracts": null,
+        "contract": null,
+        "fundingRate": 0.000097,
+        "intervalHours": 8,
+        "timestampMs": 1795735305199
+      }
+    },
+    {
+      "venue": "mexc",
+      "market": "perp",
+      "kind": "contract",
+      "endpoint": "https://contract.mexc.com/api/v1/contract/detail?symbol=BTC_USDT",
+      "utc": "2026-11-26T23:21:45.316Z",
+      "latencyMs": 248,
+      "httpStatus": 200,
+      "outcome": "observed",
+      "rateLimit": {
+        "retryAfter": null,
+        "xRatelimitLimit": null,
+        "xRatelimitRemaining": null,
+        "xRatelimitReset": null,
+        "xBapiLimit": null,
+        "xBapiLimitStatus": null,
+        "xBapiLimitResetTimestamp": null
+      },
+      "schema": [
+        [
+          "success",
+          "boolean"
+        ],
+        [
+          "code",
+          "number"
+        ],
+        [
+          "data",
+          [
+            [
+              "symbol",
+              "string"
+            ],
+            [
+              "displayName",
+              "string"
+            ],
+            [
+              "displayNameEn",
+              "string"
+            ],
+            [
+              "positionOpenType",
+              "number"
+            ],
+            [
+              "baseCoin",
+              "string"
+            ],
+            [
+              "quoteCoin",
+              "string"
+            ],
+            [
+              "baseCoinName",
+              "string"
+            ],
+            [
+              "quoteCoinName",
+              "string"
+            ],
+            [
+              "futureType",
+              "number"
+            ],
+            [
+              "settleCoin",
+              "string"
+            ],
+            [
+              "contractSize",
+              "number"
+            ],
+            [
+              "minLeverage",
+              "number"
+            ],
+            [
+              "maxLeverage",
+              "number"
+            ],
+            [
+              "countryConfigContractMaxLeverage",
+              "number"
+            ],
+            [
+              "priceScale",
+              "number"
+            ],
+            [
+              "volScale",
+              "number"
+            ],
+            [
+              "amountScale",
+              "number"
+            ],
+            [
+              "priceUnit",
+              "number"
+            ],
+            [
+              "volUnit",
+              "number"
+            ],
+            [
+              "minVol",
+              "number"
+            ],
+            [
+              "maxVol",
+              "number"
+            ],
+            [
+              "bidLimitPriceRate",
+              "number"
+            ],
+            [
+              "askLimitPriceRate",
+              "number"
+            ],
+            [
+              "takerFeeRate",
+              "number"
+            ],
+            [
+              "makerFeeRate",
+              "number"
+            ],
+            [
+              "maintenanceMarginRate",
+              "number"
+            ],
+            [
+              "initialMarginRate",
+              "number"
+            ],
+            [
+              "riskBaseVol",
+              "number"
+            ],
+            [
+              "riskIncrVol",
+              "number"
+            ],
+            [
+              "riskLongShortSwitch",
+              "number"
+            ],
+            [
+              "riskIncrMmr",
+              "number"
+            ],
+            [
+              "riskIncrImr",
+              "number"
+            ]
+          ]
+        ]
+      ],
+      "observations": {
+        "oiContracts": null,
+        "contract": {
+          "basePerContract": 0.0001,
+          "unit": "BTC"
+        },
+        "fundingRate": null,
+        "intervalHours": null,
+        "timestampMs": null
+      }
+    }
+  ]
+}

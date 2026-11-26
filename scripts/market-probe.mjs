@@ -1,11 +1,8 @@
 import { pathToFileURL } from 'node:url';
+import { number, resolveSpotCoin, contractSpec, normalizeContractSize, bitfinexStatus } from './contracts.mjs';
 import { endpoints } from './endpoints.mjs';
 
 const sides = { Buy: 'buy', Sell: 'sell', buy: 'buy', sell: 'sell', B: 'buy', A: 'sell', 1: 'buy', 2: 'sell' };
-function number(value) {
-  return (typeof value === 'number' || typeof value === 'string' && value.trim()) &&
-    Number.isFinite(Number(value)) ? Number(value) : null;
-}
 
 export function normalizeTrade(row, format, now) {
   if (!row) return null;
@@ -56,16 +53,12 @@ function metadata(data, target) {
     const row = data?.data?.[0];
     const start = number(row?.fundingTime), end = number(row?.nextFundingTime);
     return { oi: normalizeOI(row?.oiCcy, 'base'), oiContracts: number(row?.oi),
-      contractSize: number(row?.ctVal), contractUnit: row?.ctValCcy === 'BTC' ? 'BTC' : null,
+      contract: contractSpec('okx', row),
       fundingRate: number(row?.fundingRate), intervalHours: start > 0 && end > start ? (end - start) / 3600000 : null,
       timestampMs: number(row?.ts) };
   }
-  if (target.venue === 'bitfinex') {
-    const row = data?.[0];
-    return { oiContracts: [23, 24].includes(row?.length) ? number(row[row.length - 6]) : null,
-      fundingRate: [23, 24].includes(row?.length) ? number(row[row.length - 12]) : null,
-      intervalHours: null, timestampMs: number(row?.[1]) };
-  }
+  if (target.venue === 'bitfinex') return bitfinexStatus(data?.[0]) ??
+    { oiContracts: null, fundingRate: null, intervalHours: null, timestampMs: null };
   if (target.venue === 'hyperliquid') {
     const index = data?.[0]?.universe?.findIndex(row => row.name === 'BTC');
     const row = data?.[1]?.[index];
@@ -73,8 +66,7 @@ function metadata(data, target) {
       intervalHours: null, timestampMs: null };
   }
   const row = Array.isArray(data?.data) ? data.data.find(item => item.symbol === 'BTC_USDT') : data?.data;
-  return { oiContracts: number(row?.holdVol), contractSize: number(row?.contractSize),
-    contractUnit: row?.baseCoin === 'BTC' ? 'BTC' : null, fundingRate: number(row?.fundingRate),
+  return { oiContracts: number(row?.holdVol), contract: contractSpec('mexc', row), fundingRate: number(row?.fundingRate),
     intervalHours: number(row?.collectCycle), timestampMs: number(row?.timestamp) };
 }
 
@@ -107,13 +99,22 @@ export async function observe(target, request = fetch) {
       row.venueCode = number(data?.retCode ?? data?.code);
       return row;
     }
+    if (kind === 'spot-meta') {
+      const coin = resolveSpotCoin(data, 'UBTC', 'USDC');
+      row.observations = { coin };
+      row.outcome = coin ? 'observed' : 'unsupported';
+      return row;
+    }
     if (kind === 'trades') {
       const rows = tradeRows(data, venue);
       if (!Array.isArray(rows)) return row;
-      const sample = rows.slice(0, 5);
+      const filtered = venue === 'hyperliquid' ? rows.filter(item => item?.coin === body.coin) : rows;
+      const sample = filtered.slice(0, 5);
       const normalized = sample.map(item => normalizeTrade(item, venue === 'mexc' ? venue + '-' + market : venue, Date.now()))
         .filter(Boolean);
       row.observations = { inspected: sample.length, normalized: normalized.length,
+        quantityUnit: market === 'spot' || venue === 'bybit' || venue === 'hyperliquid' ? 'base' : 'contracts',
+        firstObservedQuantity: normalized[0]?.quantity ?? null,
         sides: [...new Set(normalized.map(item => item.side))],
         latestTimestampMs: normalized.length ? Math.max(...normalized.map(item => item.timestamp)) : null };
       row.outcome = normalized.length ? 'observed' : 'no-fresh-normalized-trades';
@@ -133,7 +134,26 @@ export async function observe(target, request = fetch) {
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const rows = [];
-  for (const endpoint of endpoints) rows.push(await observe(endpoint));
+  const maxRequests = 21;
+  if (endpoints.length > maxRequests) throw Error('Probe request limit exceeded');
+  for (const endpoint of endpoints) {
+    if (endpoint.venue === 'hyperliquid' && endpoint.market === 'spot' && endpoint.kind === 'trades') {
+      const coin = rows.find(row => row.kind === 'spot-meta')?.observations?.coin;
+      if (!coin) {
+        rows.push({ venue: endpoint.venue, market: endpoint.market, kind: endpoint.kind, endpoint: endpoint.url,
+          utc: new Date().toISOString(), httpStatus: null, latencyMs: null, outcome: 'unresolved-spot-mapping', observations: null });
+        continue;
+      }
+      rows.push(await observe({ ...endpoint, body: { ...endpoint.body, coin } }));
+    } else rows.push(await observe(endpoint));
+  }
+  for (const row of rows.filter(row => ['okx', 'mexc'].includes(row.venue) && row.market === 'perp' && row.observations)) {
+    const spec = rows.find(candidate => candidate.venue === row.venue && candidate.kind === 'contract')?.observations?.contract;
+    if (row.kind === 'trades') row.observations.firstObservedQuantityBTC =
+      normalizeContractSize(row.observations.firstObservedQuantity, spec);
+    if (row.kind === 'oi') row.observations.convertedOiBTC =
+      normalizeContractSize(row.observations.oiContracts, spec);
+  }
   console.log(JSON.stringify({ utc: new Date().toISOString(), baseCandidate: process.env.GITHUB_SHA ?? null,
     geography: { runnerOS: process.env.RUNNER_OS ?? null, region: null }, rows }, null, 2));
 }
