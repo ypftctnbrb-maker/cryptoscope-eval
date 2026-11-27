@@ -56,7 +56,7 @@ function verifySyntheticMarket(data, observedAt, { priceUnit, sizeUnit }) {
   }
 }
 
-export function verifyCapture(snapshot, receipt, outcome, policy) {
+export function verifySnapshot(snapshot, receipt, policy) {
   const synthetic = snapshot?.version === '1.1-synthetic';
   const extraFields = synthetic ? ['market_data'] : [];
   fields(snapshot, ['version', 'core', 'venue', 'instrument', 'candle', 'event_at', 'observed_at',
@@ -82,32 +82,49 @@ export function verifyCapture(snapshot, receipt, outcome, policy) {
 
   if (synthetic) verifySyntheticMarket(snapshot.market_data, observed_at, market);
 
+  const snapshotDigest = digest(snapshot);
+  verifyAnchor(receipt, policy, snapshotDigest, observed_at, decision_at);
+  return snapshotDigest;
+}
+
+export function verifyAnchor(receipt, policy, expectedDigest, earliest, deadline) {
   if (!receipt || policy?.free !== true || !policy.publicKey || !policy.provider) {
     throw new Error('Approved zero-cost anchor required');
   }
   fields(receipt, ['payload', 'signature']);
   fields(receipt.payload, ['provider', 'digest', 'anchored_at']);
   const { provider, digest: anchoredDigest, anchored_at } = receipt.payload;
-  if (provider !== policy.provider || !validTimes(anchored_at) || anchored_at < observed_at || anchored_at >= decision_at) {
+  if (provider !== policy.provider || !validTimes(anchored_at) || anchored_at < earliest || anchored_at >= deadline) {
     throw new Error('Invalid anchor provider or time');
   }
   if (typeof receipt.signature !== 'string' || !/^[A-Za-z0-9+/]{86}==$/.test(receipt.signature) ||
       !verify(null, canonical(receipt.payload), policy.publicKey, Buffer.from(receipt.signature, 'base64'))) {
     throw new Error('Invalid anchor signature');
   }
-  const snapshotDigest = digest(snapshot);
-  if (anchoredDigest !== snapshotDigest) throw new Error('Snapshot digest mismatch');
+  if (anchoredDigest !== expectedDigest) throw new Error('Commitment digest mismatch');
+  return anchored_at;
+}
 
+export function verifyOutcome(snapshot, outcome) {
+  const { venue, instrument, horizon_ms } = snapshot;
+  const synthetic = snapshot.version === '1.1-synthetic';
   const priceFields = synthetic ? ['open_cents', 'close_cents'] : [];
   fields(outcome, ['venue', 'instrument', 'start', 'end', 'observed_at', ...priceFields]);
   if (priceFields.some(field => !Number.isSafeInteger(outcome[field]) || outcome[field] <= 0)) {
     throw new Error('Invalid outcome prices');
   }
-  const targetStart = (Math.floor(decision_at / barMs) + 1) * barMs;
+  const targetStart = targetStartFor(snapshot);
   if (outcome.venue !== venue || outcome.instrument !== instrument ||
       !validTimes(outcome.start, outcome.end, outcome.observed_at) ||
       outcome.start !== targetStart || outcome.end - outcome.start !== horizon_ms || outcome.observed_at < outcome.end) {
     throw new Error('Invalid outcome contract');
   }
+}
+
+export const targetStartFor = snapshot => (Math.floor(snapshot.decision_at / barMs) + 1) * barMs;
+
+export function verifyCapture(snapshot, receipt, outcome, policy) {
+  const snapshotDigest = verifySnapshot(snapshot, receipt, policy);
+  verifyOutcome(snapshot, outcome);
   return snapshotDigest;
 }
