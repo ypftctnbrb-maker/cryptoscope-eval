@@ -32,3 +32,7 @@ Check Gemini free quota, rate limits, response schema and repeated-response stab
 | Scored evaluation | HOLD | Freeze folds and outcome horizon, exercise purge/embargo fixtures, and size from paired variance, time dependence and valid pair throughput. |
 
 Gemini documentation reviewed 2026-11-26 UTC. Google lists free Standard text input/output for `gemini-2.5-flash-lite`; model and feature eligibility vary, and some models have no free quota. Active RPM, TPM and RPD are project/model-specific. Record the actual limits from AI Studio before authorizing any call. No project quota evidence was available in this preparation. Use a project without linked billing, verify its free-tier eligibility and quota, lock the exact model, stop at local caps or 429, and fail closed on uncertain tier or model availability. No model calls were made. [Pricing](https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-flash-lite) · [Rate limits](https://ai.google.dev/gemini-api/docs/rate-limits) · [Billing](https://ai.google.dev/gemini-api/docs/billing)
+
+## Offline leakage audit
+
+See [the pinned core and G0 coverage audit](core-math-g0.md). Point-in-time historical evaluation remains blocked on publication and revision evidence.
