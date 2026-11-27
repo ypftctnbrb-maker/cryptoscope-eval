@@ -1,0 +1,27 @@
+# G0 review follow-up
+
+Issue #9. Preparation only. Draft #8 base `63bcec772b5dd2b6a5ad5ca4ff008adbd52d135d`. This supplements the [v1.1 protocol](prospective-capture-v1.1.md).
+
+## Bounded simulation
+
+`dryRun` validates an allowlisted synthetic snapshot and a signed fixture receipt, commits the canonical string and digest in memory, and only then calls the injected local model stub with that exact string and digest. It validates the same receipt and both digests again before returning a simulated push record. The outcome never enters the model input. No exchange data, live provider SDK, filesystem writer, queue, Git push of data or scheduled collection is involved. Test keys are ephemeral.
+
+The fixture variants cover OKX swap with contract counts (0.01 BTC per contract in this fixture) and Bitfinex perpetual with BTC sizes stored in micro-BTC. Prices are integer USDT cents; funding is integer basis points. Trade, OI and funding have separate exchange and receipt clocks and can be null. The top-level unsupported metrics stay null; a sampled signed trade is insufficient to calculate CVD. Matching outcomes are for the identical native instrument, venue and next eligible five-minute interval. These invented fixtures do not validate current contract metadata.
+
+Both arms score identical snapshots. The core-only fixture proxy uses the current closed candle return; the core+model proxy adds the local stub's fixed adjustment. The existing core source pin is validated; no production core or model is invoked. Zero return is a secondary benchmark. For the fixture, absolute errors are 5, 1 and 5 bps respectively by construction. They carry no performance or calibration evidence.
+
+Propose one preregistered primary comparison using the paired absolute return error difference (core-only minus core+model), minimum relevant improvement 1 bp, two-sided alpha 0.05, power 0.80. Score only common pairs with mature same-venue outcomes. Keep null inputs and record missing outcomes, invalid inputs, model failures, and available-pair coverage by venue. Define rounding, horizon and the missing-input policy before scoring. Split chronologically, purge overlap and apply an embargo. Estimate long-run variance over time groups with HAC and cross-check with synchronized moving-block bootstrap. For example, hypothetical long-run standard deviations of 2, 4 or 8 bps imply about 32, 126 or 503 time groups at a 1 bp effect; a 0.5 bp effect quadruples the unrounded counts. These are sensitivity inputs, with no estimated duration. Seven days applies only to authorized G0. Measure valid arrivals, retention and API/account quotas before sizing any study.
+
+## OpenTimestamps feasibility
+
+Read 2026-11-27 UTC. The [project site](https://opentimestamps.org/) describes free default public calendars without an account or API key. [Official client documentation](https://github.com/opentimestamps/opentimestamps-client#usage) shows stamping with calendars, pending receipts, subsequent proof retrieval and verification against a local Bitcoin Core node. [Reference implementation](https://github.com/opentimestamps/python-opentimestamps) documents the underlying library.
+
+A calendar can accept a submitted commitment and promise to publish it. Pending proofs still depend on that calendar making its proof path available. Once an upgraded proof reaches a Bitcoin block header, verify the exact file/commitment and proof path against an independently validated Bitcoin chain, with an approved confirmation-depth policy. A confirmed proof establishes existence by the attestation bound subject to Bitcoin timestamp semantics and chain trust. It cannot prove exchange event time, collector receipt time, source authenticity, or a precise wall-clock observation time. Public calendars batch requests; the official example describes hours until confirmation, with no immediate confirmation guarantee. Calendar availability, upgrade success and actual confirmation delay were not measured.
+
+**HOLD for the pre-decision gate.** A pending calendar response is insufficient under the current protocol. A Bitcoin-confirmed proof arriving hours later could serve as supplementary archival evidence, but it cannot satisfy the five-minute pre-decision requirement here. Consider a separately operated signed receipt service with verified time, key, terms, zero cost, response deadlines and fail-closed verification. Another option would require owner and independent review of a different decision window and delayed-confirmation protocol. No proof was stamped or submitted, no calendar was queried for a receipt, and no transaction or node was provisioned.
+
+## Remaining gates and evidence
+
+- The [rights, Bybit and quota gates](prospective-capture-v1.1.md) remain open. The prior runner's Bybit 403 is unchanged and no routing workaround was used. Public documentation is insufficient evidence of project-specific free quota or disabled billing. Gemini requests: zero.
+- RED `node --test --test-isolation=none test/dry-run.test.mjs` exited 1 because the pipeline module was absent on the base plus tests.
+- GREEN `node --test --test-isolation=none test/*.test.mjs` exited 0, 28/28. The full path rejects missing/invalid receipts, altered snapshots, future metrics, mixed venues, unknown fields including a synthetic secret, unsupported metrics and unit mismatches before the model stub. Mutation during the model call prevents release of the simulated push record.
