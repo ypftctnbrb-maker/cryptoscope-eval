@@ -1,0 +1,78 @@
+name: Bounded Gemini G0 qualification
+'on':
+  workflow_dispatch:
+    inputs:
+      verified_free_and_unbilled:
+        type: boolean
+        required: true
+        description: Exact model active on Free tier, no billing account linked, and key belongs to verified project
+      project:
+        type: string
+        required: true
+        description: Verified project identifier (not a secret)
+      observed_at:
+        type: string
+        required: true
+        description: UTC timestamp of project and quota checks (ISO 8601)
+      rpm_remaining:
+        type: number
+        required: true
+        description: Verified remaining requests this minute
+      tpm_remaining:
+        type: number
+        required: true
+        description: Verified remaining input tokens this minute
+      rpd_remaining:
+        type: number
+        required: true
+        description: Verified remaining requests today
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gemini-g0-probe
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    if: >-
+      github.repository == 'ypftctnbrb-maker/cryptoscope-eval' &&
+      github.event_name == 'workflow_dispatch' &&
+      github.ref == 'refs/heads/main' &&
+      github.run_attempt == 1 &&
+      inputs.verified_free_and_unbilled
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Verify reviewed harness and run offline tests
+        run: |
+          node --test test/gemini-g0.test.mjs
+          printf '%s  %s\n' 'db244090b892ec214779b7adf415ac4fa3c96bdceb04943fa6186c2d18ce4ff1' scripts/gemini-g0.mjs | sha256sum --check --strict
+      - name: Materialize non-secret quota evidence
+        env:
+          G0_PROJECT: ${{ inputs.project }}
+          G0_OBSERVED_AT: ${{ inputs.observed_at }}
+          G0_RPM: ${{ inputs.rpm_remaining }}
+          G0_TPM: ${{ inputs.tpm_remaining }}
+          G0_RPD: ${{ inputs.rpd_remaining }}
+        run: |
+          node --input-type=module <<'NODE'
+          import { writeFileSync } from 'node:fs';
+          import { join } from 'node:path';
+          const { G0_PROJECT, G0_OBSERVED_AT, G0_RPM, G0_TPM, G0_RPD, RUNNER_TEMP } = process.env;
+          const evidence = {
+            model: 'gemini-2.5-flash-lite', tier: 'free', billingLinked: false,
+            project: G0_PROJECT, credentialProject: G0_PROJECT, observedAt: G0_OBSERVED_AT,
+            rpmRemaining: Number(G0_RPM), tpmRemaining: Number(G0_TPM), rpdRemaining: Number(G0_RPD),
+          };
+          writeFileSync(join(RUNNER_TEMP, 'gemini-g0-evidence.json'), JSON.stringify(evidence), { flag: 'wx', mode: 0o600 });
+          NODE
+      - name: Run one bounded synthetic probe
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: node scripts/gemini-g0.mjs "$RUNNER_TEMP/gemini-g0-evidence.json"
