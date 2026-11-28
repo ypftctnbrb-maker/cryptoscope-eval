@@ -5,6 +5,7 @@ import { canonical, digest, corePin } from '../scripts/capture-guard.mjs';
 import { createDryRun } from '../scripts/dry-run.mjs';
 
 const keys = generateKeyPairSync('ed25519');
+const baseline = () => ({ bps: 10, version: 'test-double', mappingHash: '0'.repeat(64) });
 const policy = { provider: 'fixture-only', free: true, publicKey: keys.publicKey };
 const metric = (value, unit) => ({ value, unit, event_at: 300000, observed_at: 300500 });
 function fixture() {
@@ -27,7 +28,7 @@ function receipt(snapshot) {
 function run(snapshot = fixture()) {
   let now = 303000;
   let calls = 0;
-  const pipeline = createDryRun({
+  const pipeline = createDryRun({ database: ':memory:', baseline,
     policy, clock: () => now,
     model: (...args) => {
       calls++;
@@ -73,7 +74,7 @@ test('late and future input never reach the model', () => {
 test('mutation, invalid and late prediction receipts leave no prediction', () => {
   const snapshot = fixture();
   let now = 303000;
-  const pipeline = createDryRun({ policy, clock: () => now, model: () => -4, anchor: hash => {
+  const pipeline = createDryRun({ database: ':memory:', baseline, policy, clock: () => now, model: () => -4, anchor: hash => {
     now = 600000;
     return proof(hash, now);
   } });
@@ -81,7 +82,7 @@ test('mutation, invalid and late prediction receipts leave no prediction', () =>
   assert.equal(pipeline.getPrediction(digest(snapshot)), null);
   for (const mutate of [true, false]) {
     now = 303000;
-    const attempt = createDryRun({ policy, clock: () => now, model: () => {
+    const attempt = createDryRun({ database: ':memory:', baseline, policy, clock: () => now, model: () => {
       if (mutate) snapshot.market_data.close_cents++;
       return -4;
     }, anchor: () => receipt(snapshot) });
@@ -126,4 +127,106 @@ test('second venue requires a native matching outcome', () => {
   setTime(901000);
   assert.throws(() => pipeline.score(id, outcome), /outcome/);
   assert.equal(pipeline.score(id, { ...outcome, venue: snapshot.venue, instrument: snapshot.instrument }).loss.corePlusModel, 1);
+});
+
+test('persistent reservation rejects competing and restarted workers for one target', async () => {
+  const { mkdtempSync, rmSync } = await import('node:fs');
+  const { tmpdir } = await import('node:os');
+  const { join } = await import('node:path');
+  const dir = mkdtempSync(join(tmpdir(), 'g0-replay-'));
+  const database = join(dir, 'ledger.sqlite');
+  const snapshot = fixture();
+  const changed = fixture();
+  changed.market_data.close_cents++;
+  const config = { database, policy, clock: () => 303000, anchor: hash => proof(hash, 303000) };
+  const competitor = createDryRun({ database: ':memory:', baseline, ...config, model: () => assert.fail('duplicate model call') });
+  const first = createDryRun({ database: ':memory:', baseline, ...config, model: () => {
+    assert.throws(() => competitor.predict(changed, receipt(changed)), /replay/i);
+    throw new Error('simulated crash after model dispatch');
+  } });
+  try {
+    assert.throws(() => first.predict(snapshot, receipt(snapshot)), /simulated crash/);
+    first.close();
+    competitor.close();
+    const restarted = createDryRun({ database: ':memory:', baseline, ...config, model: () => assert.fail('replayed model call') });
+    try {
+      assert.throws(() => restarted.predict(changed, receipt(changed)), /replay/i);
+      assert.equal(restarted.getPrediction(digest(snapshot)), null);
+    } finally {
+      restarted.close();
+    }
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('pinned core drives the versioned baseline on a complete synthetic tape', {
+  skip: !process.env.G0_TEST_CORE_BYTES,
+}, async () => {
+  const { readFileSync } = await import('node:fs');
+  const { loadCoreBaseline } = await import('../scripts/core-baseline.mjs');
+  const source = readFileSync(process.env.G0_TEST_CORE_BYTES);
+  const actual = await loadCoreBaseline(source);
+  await assert.rejects(loadCoreBaseline(Buffer.concat([source, Buffer.from('\n')])), /pin/);
+  const snapshot = fixture();
+  assert.equal(actual(snapshot).bps, null);
+  snapshot.complete_tape = [
+    { id: 1, time: 500, observed_at: 600, side: 'Buy', quantity: 120 },
+    { id: 2, time: 700, observed_at: 800, side: 'Sell', quantity: 130 },
+  ];
+  const pipeline = createDryRun({ database: ':memory:', baseline: actual, policy, clock: () => 303000,
+    model: () => 1, anchor: hash => proof(hash, 303000) });
+  try {
+    const id = pipeline.predict(snapshot, receipt(snapshot));
+    const { record } = pipeline.getPrediction(id);
+    assert.equal(record.coreOnly, -1);
+    assert.equal(record.corePlusModel, 0);
+    assert.equal(record.baseline.version, 'synthetic-cvd-sign-v1');
+    assert.match(record.baseline.mappingHash, /^[a-f0-9]{64}$/);
+  } finally {
+    pipeline.close();
+  }
+});
+
+test('restart retains verified prediction and outcome; tampering stops simulated push', async () => {
+  const { mkdtempSync, rmSync } = await import('node:fs');
+  const { tmpdir } = await import('node:os');
+  const { join } = await import('node:path');
+  const { DatabaseSync } = await import('node:sqlite');
+  const dir = mkdtempSync(join(tmpdir(), 'g0-score-'));
+  const database = join(dir, 'ledger.sqlite');
+  let now = 303000;
+  const config = { database, baseline, policy, clock: () => now, anchor: hash => proof(hash, now), model: () => -4 };
+  const snapshot = fixture();
+  try {
+    const first = createDryRun(config);
+    const id = first.predict(snapshot, receipt(snapshot));
+    first.close();
+    now = 901000;
+    const second = createDryRun(config);
+    const tamper = new DatabaseSync(database);
+    try {
+      assert.equal(second.score(id, null), null);
+      const payload = second.getPrediction(id);
+      const altered = structuredClone(payload);
+      altered.receipt.signature = 'AAAA';
+      const write = tamper.prepare('UPDATE decisions SET prediction = ? WHERE snapshot_id = ?');
+      write.run(JSON.stringify(altered), id);
+      assert.throws(() => second.score(id, outcome), /signature/);
+      write.run(JSON.stringify(payload), id);
+      assert.equal(second.score(id, outcome).outcomeDigest, digest(outcome));
+      assert.equal(tamper.prepare('SELECT outcome_digest FROM decisions WHERE snapshot_id = ?').get(id).outcome_digest, digest(outcome));
+    } finally {
+      tamper.close();
+      second.close();
+    }
+    const restarted = createDryRun(config);
+    try {
+      assert.throws(() => restarted.score(id, { ...outcome, close_cents: outcome.close_cents + 1 }), /replay/);
+    } finally {
+      restarted.close();
+    }
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
 });
