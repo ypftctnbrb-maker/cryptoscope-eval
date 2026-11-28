@@ -14,6 +14,7 @@ function encode(value) {
   if (value === null || ['string', 'boolean'].includes(typeof value) || Number.isSafeInteger(value)) {
     return JSON.stringify(value);
   }
+  if (Array.isArray(value)) return '[' + Array.from(value, encode).join(',') + ']';
   if (value && Object.getPrototypeOf(value) === Object.prototype) {
     return '{' + Object.keys(value).sort().map(key => JSON.stringify(key) + ':' + encode(value[key])).join(',') + '}';
   }
@@ -59,6 +60,7 @@ function verifySyntheticMarket(data, observedAt, { priceUnit, sizeUnit }) {
 export function verifySnapshot(snapshot, receipt, policy) {
   const synthetic = snapshot?.version === '1.1-synthetic';
   const extraFields = synthetic ? ['market_data'] : [];
+  if (synthetic && Object.hasOwn(snapshot, 'complete_tape')) extraFields.push('complete_tape');
   fields(snapshot, ['version', 'core', 'venue', 'instrument', 'candle', 'event_at', 'observed_at',
     'decision_at', 'horizon_ms', 'cvd', 'oi', 'funding', ...extraFields]);
   fields(snapshot.core, ['sha', 'sha256']);
@@ -81,6 +83,18 @@ export function verifySnapshot(snapshot, receipt, policy) {
   }
 
   if (synthetic) verifySyntheticMarket(snapshot.market_data, observed_at, market);
+  if (snapshot.complete_tape !== undefined) {
+    const tape = snapshot.complete_tape;
+    if (!Array.isArray(tape) || tape.length < 1 || tape.length > 64) throw new Error('Invalid synthetic tape');
+    for (const trade of tape) {
+      fields(trade, ['id', 'time', 'observed_at', 'side', 'quantity']);
+      if (!validTimes(trade.id, trade.time, trade.observed_at, trade.quantity) ||
+          trade.quantity === 0 || trade.quantity > 1000000000 ||
+          trade.time < candle.open || trade.time >= candle.close ||
+          trade.time > trade.observed_at || trade.observed_at > observed_at ||
+          !['Buy', 'Sell'].includes(trade.side)) throw new Error('Invalid synthetic tape timing or units');
+    }
+  }
 
   const snapshotDigest = digest(snapshot);
   verifyAnchor(receipt, policy, snapshotDigest, observed_at, decision_at);
